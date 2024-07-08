@@ -107,7 +107,7 @@ class ReasoningAgent:
         entities = [ent.text for ent in doc.ents]
 
         # Prioritize "done" and "learning rate" queries
-        if any(intent in ["done", "complete", "finished"] for intent in intents):
+        if any(intent in ["done", "complete", "finished", "completion", "status"] for intent in intents):
             return f"The episode is {'done' if self.done else 'not done'}."
         elif any(intent in ["learning", "rate"] for intent in intents):
             try:
@@ -128,8 +128,10 @@ class ReasoningAgent:
             return f"The agent has completed {self.total_reward} reward points so far."
         elif any(intent in ["decision", "process"] for intent in intents):
             return f"The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model."
-        elif any(intent in ["training", "learning"] for intent in intents):
+        elif any(intent in ["training", "learning status"] for intent in intents):
             return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
+        elif any(intent in ["episodes trained", "training progress"] for intent in intents):
+            return f"The agent has been trained for {self.episodes_trained} episodes. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
         elif any(intent in ["hyperparameter", "parameter"] for intent in intents):
             return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
         elif any(intent in ["architecture", "structure", "model"] for intent in intents):
@@ -139,8 +141,6 @@ class ReasoningAgent:
                 return "The agent's model architecture consists of: Dense layers with ReLU activations and has been trained."
         elif any(intent in ["batch", "size"] for intent in intents):
             return f"The agent's batch size is: {self.memory.maxlen}"
-        elif any(intent in ["episode", "trained", "training"] for intent in intents):
-            return f"The agent has been trained for {self.episodes_trained} episodes. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
         elif entities:
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
@@ -148,7 +148,7 @@ class ReasoningAgent:
             greetings = ["hi", "hello", "hey"]
             if any(greet in query.lower() for greet in greetings):
                 return "How can I assist you today?"
-            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, decision-making process, training status, hyperparameters, model architecture, learning rate, batch size, or number of episodes trained."
+            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, decision-making process, training status, hyperparameters, model architecture, learning rate, batch size, number of episodes trained, or episode completion status."
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
