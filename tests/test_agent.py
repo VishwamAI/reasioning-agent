@@ -1,0 +1,64 @@
+import unittest
+from src.agent import ReasoningAgent
+
+class TestReasoningAgent(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.agent = ReasoningAgent(env_name="CartPole-v1")
+        cls.agent.train(episodes=10, batch_size=32)
+
+    def test_handle_query_state(self):
+        response = self.agent.handle_query("What is the current state?")
+        self.assertIn("The current state is:", response)
+
+    def test_handle_query_reward(self):
+        response = self.agent.handle_query("What is the total reward?")
+        self.assertIn("The total reward accumulated is:", response)
+
+    def test_handle_query_done(self):
+        response = self.agent.handle_query("Is the episode done?")
+        self.assertIn("The episode is", response)
+
+    def test_handle_query_action(self):
+        response = self.agent.handle_query("What is the chosen action?")
+        self.assertIn("The chosen action is:", response)
+
+    def test_handle_query_progress(self):
+        response = self.agent.handle_query("What is the progress?")
+        self.assertIn("The agent has completed", response)
+
+    def test_handle_query_decision(self):
+        response = self.agent.handle_query("What is the decision-making process?")
+        self.assertIn("The agent's decision-making process involves", response)
+
+    def test_handle_query_training(self):
+        response = self.agent.handle_query("Is the agent training?")
+        self.assertIn("The agent is currently", response)
+
+    def test_handle_query_hyperparameters(self):
+        response = self.agent.handle_query("What are the hyperparameters?")
+        self.assertIn("The agent's hyperparameters are:", response)
+
+    def test_handle_query_architecture(self):
+        response = self.agent.handle_query("What is the model architecture?")
+        self.assertIn("The agent's model architecture consists of", response)
+
+    def test_handle_query_learning_rate(self):
+        response = self.agent.handle_query("What is the learning rate?")
+        self.assertIn("The agent's learning rate is:", response)
+
+    def test_handle_query_batch_size(self):
+        response = self.agent.handle_query("What is the batch size?")
+        self.assertIn("The agent's batch size is:", response)
+
+    def test_handle_query_episodes_trained(self):
+        response = self.agent.handle_query("How many episodes have been trained?")
+        self.assertIn("The agent has been trained for", response)
+
+    def test_handle_query_unknown(self):
+        response = self.agent.handle_query("What is the meaning of life?")
+        self.assertIn("I'm sorry, I don't understand the question.", response)
+
+if __name__ == "__main__":
+    unittest.main()
