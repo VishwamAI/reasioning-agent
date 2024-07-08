@@ -115,8 +115,8 @@ class ReasoningAgent:
             except AttributeError:
                 learning_rate = 0.001  # Default learning rate
             return f"The agent's learning rate is: {learning_rate}."
-        elif any(intent in ["training", "learning status", "progress", "learning", "status"] for intent in intents):
-            return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
+        elif any(intent in ["training", "learning status", "status"] for intent in intents):
+            return f"The agent is currently {'training' if not self.done else 'not training'}."
         elif any(intent in ["episodes trained", "training progress", "episodes", "trained"] for intent in intents):
             return f"The agent has been trained for {self.episodes_trained} episodes."
         elif any(intent in ["state", "status"] for intent in intents):
@@ -126,8 +126,8 @@ class ReasoningAgent:
         elif any(intent in ["action", "move"] for intent in intents):
             action = self.choose_action(self.state)
             return f"The chosen action is: {action}"
-        elif any(intent in ["progress", "advancement"] for intent in intents):
-            return f"The agent has completed {self.total_reward} reward points so far."
+        elif any(intent in ["progress", "advancement", "development", "improvement"] for intent in intents):
+            return f"The agent has completed {self.episodes_trained} episodes with a total reward of {self.total_reward}."
         elif any(intent in ["decision", "process"] for intent in intents):
             return f"The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model."
         elif any(intent in ["hyperparameter", "parameter"] for intent in intents):
