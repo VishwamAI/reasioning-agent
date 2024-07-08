@@ -47,10 +47,13 @@ class TestReasoningAgent(unittest.TestCase):
         self.assertIn("The agent's model architecture consists of", response)
         if self.agent.episodes_trained == 0:
             self.assertIn("Dense layers with ReLU activations", response)
+        else:
+            self.assertIn("Dense layers with ReLU activations and has been trained", response)
 
     def test_handle_query_learning_rate(self):
         response = self.agent.handle_query("What is the learning rate?")
         self.assertIn("The agent's learning rate is:", response)
+        self.assertIn("Training has", response)
 
     def test_handle_query_batch_size(self):
         response = self.agent.handle_query("What is the batch size?")
