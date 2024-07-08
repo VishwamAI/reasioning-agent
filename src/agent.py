@@ -106,22 +106,20 @@ class ReasoningAgent:
         intents = [token.lemma_ for token in doc if token.pos_ in ["VERB", "NOUN"]]
         entities = [ent.text for ent in doc.ents]
 
-        # Prioritize "done" and "learning rate" queries
-        if any(intent in ["done", "complete", "finished", "completion", "status"] for intent in intents):
+        # Consolidate intent checks
+        if any(intent in ["done", "complete", "finished", "completion", "status", "end", "over"] for intent in intents):
             return f"The episode is {'done' if self.done else 'not done'}."
-        elif any(intent in ["learning", "rate"] for intent in intents):
+        elif any(intent in ["learning", "rate", "speed"] for intent in intents):
             try:
                 learning_rate = self.model.optimizer.learning_rate.numpy()
             except AttributeError:
                 learning_rate = 0.001  # Default learning rate
             return f"The agent's learning rate is: {learning_rate}."
-        elif any(intent in ["training", "learning status"] for intent in intents):
+        elif any(intent in ["training", "learning status", "progress", "learning", "status"] for intent in intents):
             return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
-        elif any(intent in ["episodes trained", "training progress"] for intent in intents):
+        elif any(intent in ["episodes trained", "training progress", "episodes", "trained"] for intent in intents):
             return f"The agent has been trained for {self.episodes_trained} episodes."
-
-        # Improved intent recognition
-        if any(intent in ["state", "status"] for intent in intents):
+        elif any(intent in ["state", "status"] for intent in intents):
             return f"The current state is: {self.state}"
         elif any(intent in ["reward", "total"] for intent in intents):
             return f"The total reward accumulated is: {self.total_reward}"
@@ -132,10 +130,6 @@ class ReasoningAgent:
             return f"The agent has completed {self.total_reward} reward points so far."
         elif any(intent in ["decision", "process"] for intent in intents):
             return f"The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model."
-        elif any(intent in ["training", "learning status"] for intent in intents):
-            return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
-        elif any(intent in ["episodes trained", "training progress"] for intent in intents):
-            return f"The agent has been trained for {self.episodes_trained} episodes."
         elif any(intent in ["hyperparameter", "parameter"] for intent in intents):
             return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
         elif any(intent in ["architecture", "structure", "model"] for intent in intents):
