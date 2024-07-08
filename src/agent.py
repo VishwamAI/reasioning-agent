@@ -115,6 +115,10 @@ class ReasoningAgent:
             except AttributeError:
                 learning_rate = 0.001  # Default learning rate
             return f"The agent's learning rate is: {learning_rate}."
+        elif any(intent in ["training", "learning status"] for intent in intents):
+            return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
+        elif any(intent in ["episodes trained", "training progress"] for intent in intents):
+            return f"The agent has been trained for {self.episodes_trained} episodes. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
 
         # Improved intent recognition
         if any(intent in ["state", "status"] for intent in intents):
