@@ -6,7 +6,7 @@ class TestReasoningAgent(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.agent = ReasoningAgent(env_name="CartPole-v1")
-        # Commenting out the training process to avoid long execution times during tests
+        # Commenting out the training process to speed up the test suite
         # cls.agent.train(episodes=10, batch_size=32)
 
     def test_handle_query_state(self):
