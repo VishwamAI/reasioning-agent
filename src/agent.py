@@ -118,7 +118,7 @@ class ReasoningAgent:
         elif any(intent in ["training", "learning status"] for intent in intents):
             return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
         elif any(intent in ["episodes trained", "training progress"] for intent in intents):
-            return f"The agent has been trained for {self.episodes_trained} episodes. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
+            return f"The agent has been trained for {self.episodes_trained} episodes."
 
         # Improved intent recognition
         if any(intent in ["state", "status"] for intent in intents):
@@ -135,7 +135,7 @@ class ReasoningAgent:
         elif any(intent in ["training", "learning status"] for intent in intents):
             return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
         elif any(intent in ["episodes trained", "training progress"] for intent in intents):
-            return f"The agent has been trained for {self.episodes_trained} episodes. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
+            return f"The agent has been trained for {self.episodes_trained} episodes."
         elif any(intent in ["hyperparameter", "parameter"] for intent in intents):
             return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
         elif any(intent in ["architecture", "structure", "model"] for intent in intents):
