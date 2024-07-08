@@ -106,13 +106,21 @@ class ReasoningAgent:
         intents = [token.lemma_ for token in doc if token.pos_ in ["VERB", "NOUN"]]
         entities = [ent.text for ent in doc.ents]
 
+        # Prioritize "done" and "learning rate" queries
+        if any(intent in ["done", "complete", "finished"] for intent in intents):
+            return f"The episode is {'done' if self.done else 'not done'}."
+        elif any(intent in ["learning", "rate"] for intent in intents):
+            try:
+                learning_rate = self.model.optimizer.learning_rate.numpy()
+            except AttributeError:
+                learning_rate = 0.001  # Default learning rate
+            return f"The agent's learning rate is: {learning_rate}."
+
         # Improved intent recognition
         if any(intent in ["state", "status"] for intent in intents):
             return f"The current state is: {self.state}"
         elif any(intent in ["reward", "total"] for intent in intents):
             return f"The total reward accumulated is: {self.total_reward}"
-        elif any(intent in ["done", "complete", "finished"] for intent in intents):
-            return f"The episode is {'done' if self.done else 'not done'}."
         elif any(intent in ["action", "move"] for intent in intents):
             action = self.choose_action(self.state)
             return f"The chosen action is: {action}"
@@ -129,12 +137,6 @@ class ReasoningAgent:
                 return "The agent's model architecture consists of: Dense layers with ReLU activations."
             else:
                 return "The agent's model architecture consists of: Dense layers with ReLU activations and has been trained."
-        elif any(intent in ["learning", "rate"] for intent in intents):
-            try:
-                learning_rate = self.model.optimizer.learning_rate.numpy()
-            except AttributeError:
-                learning_rate = 0.001  # Default learning rate
-            return f"The agent's learning rate is: {learning_rate}."
         elif any(intent in ["batch", "size"] for intent in intents):
             return f"The agent's batch size is: {self.memory.maxlen}"
         elif any(intent in ["episode", "trained", "training"] for intent in intents):

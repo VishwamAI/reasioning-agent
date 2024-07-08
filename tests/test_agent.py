@@ -8,6 +8,8 @@ class TestReasoningAgent(unittest.TestCase):
         cls.agent = ReasoningAgent(env_name="CartPole-v1")
         # Commenting out the training process to speed up the test suite
         # cls.agent.train(episodes=10, batch_size=32)
+        cls.agent.episodes_trained = 10  # Set episodes_trained to a non-zero value for testing
+        cls.agent.done = True  # Set done to True for testing
 
     def test_handle_query_state(self):
         response = self.agent.handle_query("What is the current state?")
