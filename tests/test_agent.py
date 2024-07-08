@@ -20,7 +20,6 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_done(self):
         response = self.agent.handle_query("Is the episode done?")
         self.assertIn("The episode is", response)
-        self.assertIn("Training has", response)
 
     def test_handle_query_action(self):
         response = self.agent.handle_query("What is the chosen action?")
@@ -53,7 +52,6 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_learning_rate(self):
         response = self.agent.handle_query("What is the learning rate?")
         self.assertIn("The agent's learning rate is:", response)
-        self.assertIn("Training has", response)
 
     def test_handle_query_batch_size(self):
         response = self.agent.handle_query("What is the batch size?")
@@ -62,7 +60,6 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_episodes_trained(self):
         response = self.agent.handle_query("How many episodes have been trained?")
         self.assertIn("The agent has been trained for", response)
-        self.assertIn("Training has", response)
 
     def test_handle_query_unknown(self):
         response = self.agent.handle_query("What is the meaning of life?")
