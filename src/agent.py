@@ -111,39 +111,40 @@ class ReasoningAgent:
         if any(greet in query.lower() for greet in greetings):
             return "How can I assist you today?"
 
-        if "state" in intents:
+        # Improved intent recognition
+        if any(intent in ["state", "status"] for intent in intents):
             return f"The current state is: {self.state}"
-        elif "reward" in intents:
+        elif any(intent in ["reward", "total"] for intent in intents):
             return f"The total reward accumulated is: {self.total_reward}"
-        elif "done" in intents:
+        elif any(intent in ["done", "complete", "finished"] for intent in intents):
             return f"The episode is {'done' if self.done else 'not done'}. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
-        elif "action" in intents:
+        elif any(intent in ["action", "move"] for intent in intents):
             action = self.choose_action(self.state)
             return f"The chosen action is: {action}"
-        elif "progress" in intents:
+        elif any(intent in ["progress", "advancement"] for intent in intents):
             return f"The agent has completed {self.total_reward} reward points so far."
-        elif "decision" in intents:
+        elif any(intent in ["decision", "process"] for intent in intents):
             return f"The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model."
-        elif "training" in intents:
+        elif any(intent in ["training", "learning"] for intent in intents):
             return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
-        elif "hyperparameter" in intents:
+        elif any(intent in ["hyperparameter", "parameter"] for intent in intents):
             return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
-        elif "architecture" in intents:
+        elif any(intent in ["architecture", "structure", "model"] for intent in intents):
             if self.episodes_trained == 0:
                 return "The agent's model architecture consists of: Dense layers with ReLU activations."
             else:
                 model_summary = []
                 self.model.summary(print_fn=lambda x: model_summary.append(x))
                 return f"The agent's model architecture consists of: {' '.join(model_summary)}"
-        elif "learning" in intents and "rate" in intents:
+        elif any(intent in ["learning", "rate"] for intent in intents):
             try:
                 learning_rate = self.model.optimizer.learning_rate.numpy()
             except AttributeError:
                 learning_rate = self.model.optimizer.learning_rate
             return f"The agent's learning rate is: {learning_rate}"
-        elif "batch" in intents and "size" in intents:
+        elif any(intent in ["batch", "size"] for intent in intents):
             return f"The agent's batch size is: {self.memory.maxlen}"
-        elif "episode" in intents and "trained" in intents:
+        elif any(intent in ["episode", "trained", "training"] for intent in intents):
             return f"The agent has been trained for {self.episodes_trained} episodes. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
         elif entities:
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
