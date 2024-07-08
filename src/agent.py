@@ -106,42 +106,63 @@ class ReasoningAgent:
         intents = [token.lemma_ for token in doc if token.pos_ in ["VERB", "NOUN"]]
         entities = [ent.text for ent in doc.ents]
 
+        # Debug logging
+        print(f"Query: {query}")
+        print(f"Intents: {intents}")
+        print(f"Entities: {entities}")
+        print(f"Done: {self.done}")
+        print(f"Episodes Trained: {self.episodes_trained}")
+
         # Consolidate intent checks
-        if any(intent in ["done", "complete", "finished", "completion", "status", "end", "over"] for intent in intents):
+        if any(intent in ["done", "complete", "finished", "completion", "status", "end", "over", "do"] for intent in intents):
+            print(f"Returning: The episode is {'done' if self.done else 'not done'}.")
             return f"The episode is {'done' if self.done else 'not done'}."
         elif any(intent in ["learning", "rate", "speed"] for intent in intents):
             try:
                 learning_rate = self.model.optimizer.learning_rate.numpy()
             except AttributeError:
                 learning_rate = 0.001  # Default learning rate
+            print(f"Returning: The agent's learning rate is: {learning_rate}.")
             return f"The agent's learning rate is: {learning_rate}."
-        elif any(intent in ["training", "learning", "learning status", "status", "progress", "trained", "episodes trained", "training progress", "episodes"] for intent in intents):
+        elif any(intent in ["training", "learning", "learning status", "status", "progress", "trained", "episodes trained", "training progress", "episodes", "train"] for intent in intents):
+            print(f"Returning: The agent has been trained for {self.episodes_trained} episodes.")
             return f"The agent has been trained for {self.episodes_trained} episodes."
         elif any(intent in ["state", "status"] for intent in intents):
+            print(f"Returning: The current state is: {self.state}")
             return f"The current state is: {self.state}"
         elif any(intent in ["reward", "total"] for intent in intents):
+            print(f"Returning: The total reward accumulated is: {self.total_reward}")
             return f"The total reward accumulated is: {self.total_reward}"
         elif any(intent in ["action", "move"] for intent in intents):
             action = self.choose_action(self.state)
+            print(f"Returning: The chosen action is: {action}")
             return f"The chosen action is: {action}"
         elif any(intent in ["decision", "process"] for intent in intents):
+            print(f"Returning: The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model.")
             return f"The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model."
         elif any(intent in ["hyperparameter", "parameter"] for intent in intents):
+            print(f"Returning: The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}.")
             return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
         elif any(intent in ["architecture", "structure", "model"] for intent in intents):
             if self.episodes_trained == 0:
+                print(f"Returning: The agent's model architecture consists of: Dense layers with ReLU activations.")
                 return "The agent's model architecture consists of: Dense layers with ReLU activations."
             else:
+                print(f"Returning: The agent's model architecture consists of: Dense layers with ReLU activations and has been trained.")
                 return "The agent's model architecture consists of: Dense layers with ReLU activations and has been trained."
         elif any(intent in ["batch", "size"] for intent in intents):
+            print(f"Returning: The agent's batch size is: {self.memory.maxlen}")
             return f"The agent's batch size is: {self.memory.maxlen}"
         elif entities:
+            print(f"Returning: I'm sorry, I don't have information about: {', '.join(entities)}")
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
             # Check for greetings
             greetings = ["hi", "hello", "hey"]
             if any(greet in query.lower() for greet in greetings):
+                print("Returning: How can I assist you today?")
                 return "How can I assist you today?"
+            print("Returning: I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, training status, hyperparameters, model architecture, learning rate, batch size, number of episodes trained, or episode completion status.")
             return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, training status, hyperparameters, model architecture, learning rate, batch size, number of episodes trained, or episode completion status."
 
 if __name__ == "__main__":
