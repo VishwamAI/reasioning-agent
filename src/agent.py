@@ -95,6 +95,25 @@ class ReasoningAgent:
             self.update_target_model()
             print(f"Episode {e+1}/{episodes}, Total reward: {total_reward}, Epsilon: {self.epsilon}")
 
+    def handle_query(self, query):
+        query = query.lower()
+        if "state" in query:
+            return f"The current state is: {self.state}"
+        elif "reward" in query:
+            return f"The total reward accumulated is: {self.total_reward}"
+        elif "done" in query:
+            return f"The episode is {'done' if self.done else 'not done'}"
+        elif "action" in query:
+            action = self.choose_action(self.state)
+            return f"The chosen action is: {action}"
+        else:
+            return "I'm sorry, I don't understand the question."
+
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
     agent.train(episodes=1000, batch_size=32)
+    # Example queries
+    print(agent.handle_query("What is the current state?"))
+    print(agent.handle_query("What is the total reward?"))
+    print(agent.handle_query("Is the episode done?"))
+    print(agent.handle_query("What action should be taken?"))
