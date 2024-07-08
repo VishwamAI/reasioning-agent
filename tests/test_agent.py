@@ -20,6 +20,7 @@ class TestReasoningAgent(unittest.TestCase):
         self.assertIn("The total reward accumulated is:", response)
 
     def test_handle_query_done(self):
+        self.assertTrue(self.agent.done)  # Verify the state before querying
         response = self.agent.handle_query("Is the episode done?")
         self.assertIn("The episode is", response)
         self.assertIn("done", response)
@@ -31,6 +32,7 @@ class TestReasoningAgent(unittest.TestCase):
         self.assertIn("done", response)
 
     def test_handle_query_completion_status(self):
+        self.assertTrue(self.agent.done)  # Verify the state before querying
         response = self.agent.handle_query("What is the episode completion status?")
         self.assertIn("The episode is", response)
         self.assertIn("done", response)
@@ -40,6 +42,7 @@ class TestReasoningAgent(unittest.TestCase):
         self.assertIn("The chosen action is:", response)
 
     def test_handle_query_progress(self):
+        self.assertEqual(self.agent.episodes_trained, 10)  # Verify the state before querying
         response = self.agent.handle_query("What is the progress?")
         self.assertIn("The agent has been trained for", response)
         self.assertIn("episodes", response)
@@ -49,6 +52,7 @@ class TestReasoningAgent(unittest.TestCase):
         self.assertIn("The agent's decision-making process involves", response)
 
     def test_handle_query_training(self):
+        self.assertEqual(self.agent.episodes_trained, 10)  # Verify the state before querying
         response = self.agent.handle_query("What is the learning status?")
         self.assertIn("The agent has been trained for", response)
         self.assertIn("episodes", response)
@@ -74,6 +78,7 @@ class TestReasoningAgent(unittest.TestCase):
         self.assertIn("The agent's batch size is:", response)
 
     def test_handle_query_episodes_trained(self):
+        self.assertEqual(self.agent.episodes_trained, 10)  # Verify the state before querying
         response = self.agent.handle_query("How many episodes have been trained?")
         self.assertIn("The agent has been trained for", response)
         self.assertIn("episodes", response)
