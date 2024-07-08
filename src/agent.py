@@ -106,11 +106,6 @@ class ReasoningAgent:
         intents = [token.lemma_ for token in doc if token.pos_ in ["VERB", "NOUN"]]
         entities = [ent.text for ent in doc.ents]
 
-        # Check for greetings
-        greetings = ["hi", "hello", "hey"]
-        if any(greet in query.lower() for greet in greetings):
-            return "How can I assist you today?"
-
         # Improved intent recognition
         if any(intent in ["state", "status"] for intent in intents):
             return f"The current state is: {self.state}"
@@ -148,6 +143,11 @@ class ReasoningAgent:
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
             return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, decision-making process, training status, hyperparameters, model architecture, learning rate, batch size, or number of episodes trained."
+
+        # Check for greetings
+        greetings = ["hi", "hello", "hey"]
+        if any(greet in query.lower() for greet in greetings):
+            return "How can I assist you today?"
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
