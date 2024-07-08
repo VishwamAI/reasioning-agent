@@ -22,6 +22,18 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_done(self):
         response = self.agent.handle_query("Is the episode done?")
         self.assertIn("The episode is", response)
+        self.assertIn("done", response)
+        response = self.agent.handle_query("Is the episode complete?")
+        self.assertIn("The episode is", response)
+        self.assertIn("done", response)
+        response = self.agent.handle_query("Is the episode finished?")
+        self.assertIn("The episode is", response)
+        self.assertIn("done", response)
+
+    def test_handle_query_completion_status(self):
+        response = self.agent.handle_query("What is the episode completion status?")
+        self.assertIn("The episode is", response)
+        self.assertIn("done", response)
 
     def test_handle_query_action(self):
         response = self.agent.handle_query("What is the chosen action?")
@@ -36,8 +48,9 @@ class TestReasoningAgent(unittest.TestCase):
         self.assertIn("The agent's decision-making process involves", response)
 
     def test_handle_query_training(self):
-        response = self.agent.handle_query("Is the agent training?")
+        response = self.agent.handle_query("What is the learning status?")
         self.assertIn("The agent is currently", response)
+        self.assertIn("training", response)
 
     def test_handle_query_hyperparameters(self):
         response = self.agent.handle_query("What are the hyperparameters?")
@@ -62,6 +75,10 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_episodes_trained(self):
         response = self.agent.handle_query("How many episodes have been trained?")
         self.assertIn("The agent has been trained for", response)
+        self.assertIn("episodes", response)
+        response = self.agent.handle_query("What is the training progress?")
+        self.assertIn("The agent has been trained for", response)
+        self.assertIn("episodes", response)
 
     def test_handle_query_unknown(self):
         response = self.agent.handle_query("What is the meaning of life?")
