@@ -7,9 +7,13 @@ from tensorflow.keras.optimizers import Adam
 from collections import deque
 import random
 import spacy
+import logging
 
 # Load the spaCy model
 nlp = spacy.load("en_core_web_sm")
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class ReasoningAgent:
     def __init__(self, env_name):
@@ -95,12 +99,24 @@ class ReasoningAgent:
 
     def train(self, episodes, batch_size):
         for e in range(episodes):
-            total_reward = self.run_episode()
-            if len(self.memory) > batch_size:
-                self.replay(batch_size)
-            self.update_target_model()
-            self.episodes_trained += 1
-            print(f"Episode {e+1}/{episodes}, Total reward: {total_reward}, Epsilon: {self.epsilon}")
+            try:
+                total_reward = self.run_episode()
+                if len(self.memory) > batch_size:
+                    self.replay(batch_size)
+                self.update_target_model()
+                self.episodes_trained += 1
+                logging.info(f"Episode {e+1}/{episodes}, Total reward: {total_reward}, Epsilon: {self.epsilon}")
+            except Exception as e:
+                logging.error(f"An error occurred during training: {e}")
+
+    def save_model(self, filepath):
+        self.model.save(filepath)
+        logging.info(f"Model saved to {filepath}")
+
+    def load_model(self, filepath):
+        self.model = tf.keras.models.load_model(filepath)
+        self.update_target_model()
+        logging.info(f"Model loaded from {filepath}")
 
     def handle_query(self, query):
         doc = nlp(query)
@@ -108,18 +124,18 @@ class ReasoningAgent:
         entities = [ent.text for ent in doc.ents]
 
         # Debug logging
-        print(f"Query: {query}")
-        print(f"Intents: {intents}")
-        print(f"Entities: {entities}")
-        print(f"Done: {self.done}")
-        print(f"Episodes Trained: {self.episodes_trained}")
+        logging.debug(f"Query: {query}")
+        logging.debug(f"Intents: {intents}")
+        logging.debug(f"Entities: {entities}")
+        logging.debug(f"Done: {self.done}")
+        logging.debug(f"Episodes Trained: {self.episodes_trained}")
 
         # Check for follow-up questions
         if "follow-up" in self.context:
             last_query = self.context["last_query"]
             last_response = self.context["last_response"]
             if any(intent in ["more", "detail", "explain"] for intent in intents):
-                print(f"Returning: Providing more details about the last query: {last_query}")
+                logging.debug(f"Returning: Providing more details about the last query: {last_query}")
                 return f"Providing more details about the last query: {last_query}"
 
         # Consolidate intent checks
@@ -165,14 +181,14 @@ class ReasoningAgent:
         self.context["last_query"] = query
         self.context["last_response"] = response
 
-        print(f"Returning: {response}")
+        logging.debug(f"Returning: {response}")
         return response
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
     agent.train(episodes=1000, batch_size=32)
     # Example queries
-    print(agent.handle_query("What is the current state?"))
-    print(agent.handle_query("What is the total reward?"))
-    print(agent.handle_query("Is the episode done?"))
-    print(agent.handle_query("What action should be taken?"))
+    logging.info(agent.handle_query("What is the current state?"))
+    logging.info(agent.handle_query("What is the total reward?"))
+    logging.info(agent.handle_query("Is the episode done?"))
+    logging.info(agent.handle_query("What action should be taken?"))
