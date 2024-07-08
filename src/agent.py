@@ -103,7 +103,7 @@ class ReasoningAgent:
 
     def handle_query(self, query):
         doc = nlp(query)
-        intents = [token.lemma_ for token in doc if token.pos_ in ["VERB", "NOUN"]]
+        intents = [token.lemma_ for token in doc if token.pos_ in ["VERB", "NOUN", "ADJ"]]
         entities = [ent.text for ent in doc.ents]
 
         # Debug logging
@@ -114,7 +114,7 @@ class ReasoningAgent:
         print(f"Episodes Trained: {self.episodes_trained}")
 
         # Consolidate intent checks
-        if any(intent in ["done", "complete", "finished", "completion", "end", "over", "do"] for intent in intents):
+        if any(intent in ["done", "complete", "finished", "completion", "end", "over", "do", "finish"] for intent in intents):
             print(f"Returning: The episode is {'done' if self.done else 'not done'}.")
             return f"The episode is {'done' if self.done else 'not done'}."
         elif any(intent in ["learning", "rate", "speed"] for intent in intents):
@@ -124,7 +124,7 @@ class ReasoningAgent:
                 learning_rate = 0.001  # Default learning rate
             print(f"Returning: The agent's learning rate is: {learning_rate}.")
             return f"The agent's learning rate is: {learning_rate}."
-        elif any(intent in ["training", "learning", "progress", "trained", "episodes trained", "training progress", "episodes", "train", "learning status"] for intent in intents):
+        elif any(intent in ["training", "learning", "progress", "trained", "episodes trained", "training progress", "episodes", "train", "learning status", "status"] for intent in intents):
             print(f"Returning: The agent has been trained for {self.episodes_trained} episodes.")
             return f"The agent has been trained for {self.episodes_trained} episodes."
         elif any(intent in ["state"] for intent in intents):
