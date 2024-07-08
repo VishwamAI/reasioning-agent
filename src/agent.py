@@ -26,6 +26,7 @@ class ReasoningAgent:
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
+        self.episodes_trained = 0
         self.update_target_model()
 
     def _build_model(self):
@@ -97,6 +98,7 @@ class ReasoningAgent:
             if len(self.memory) > batch_size:
                 self.replay(batch_size)
             self.update_target_model()
+            self.episodes_trained += 1
             print(f"Episode {e+1}/{episodes}, Total reward: {total_reward}, Epsilon: {self.epsilon}")
 
     def handle_query(self, query):
@@ -122,9 +124,15 @@ class ReasoningAgent:
         elif "hyperparameter" in intents:
             return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
         elif "architecture" in intents:
-            return f"The agent's model architecture consists of a neural network with layers: {self.model.summary()}"
+            model_summary = []
+            self.model.summary(print_fn=lambda x: model_summary.append(x))
+            return f"The agent's model architecture consists of a neural network with layers: {' '.join(model_summary)}"
         elif "learning" in intents and "rate" in intents:
-            return f"The agent's learning rate is: {self.model.optimizer.learning_rate.numpy()}"
+            try:
+                learning_rate = self.model.optimizer.learning_rate.numpy()
+            except AttributeError:
+                learning_rate = self.model.optimizer.learning_rate
+            return f"The agent's learning rate is: {learning_rate}"
         elif "batch" in intents and "size" in intents:
             return f"The agent's batch size is: {self.memory.maxlen}"
         elif "episode" in intents and "trained" in intents:
