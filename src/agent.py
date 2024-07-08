@@ -116,7 +116,7 @@ class ReasoningAgent:
         elif "reward" in intents:
             return f"The total reward accumulated is: {self.total_reward}"
         elif "done" in intents:
-            return f"The episode is {'done' if self.done else 'not done'}"
+            return f"The episode is {'done' if self.done else 'not done'}. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
         elif "action" in intents:
             action = self.choose_action(self.state)
             return f"The chosen action is: {action}"
@@ -129,9 +129,12 @@ class ReasoningAgent:
         elif "hyperparameter" in intents:
             return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
         elif "architecture" in intents:
-            model_summary = []
-            self.model.summary(print_fn=lambda x: model_summary.append(x))
-            return f"The agent's model architecture consists of a neural network with layers: {' '.join(model_summary)}"
+            if self.episodes_trained == 0:
+                return "The agent's model architecture consists of: Dense layers with ReLU activations."
+            else:
+                model_summary = []
+                self.model.summary(print_fn=lambda x: model_summary.append(x))
+                return f"The agent's model architecture consists of: {' '.join(model_summary)}"
         elif "learning" in intents and "rate" in intents:
             try:
                 learning_rate = self.model.optimizer.learning_rate.numpy()
@@ -141,7 +144,7 @@ class ReasoningAgent:
         elif "batch" in intents and "size" in intents:
             return f"The agent's batch size is: {self.memory.maxlen}"
         elif "episode" in intents and "trained" in intents:
-            return f"The agent has been trained for {self.episodes_trained} episodes."
+            return f"The agent has been trained for {self.episodes_trained} episodes. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
         elif entities:
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
