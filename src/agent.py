@@ -116,7 +116,7 @@ class ReasoningAgent:
                 learning_rate = 0.001  # Default learning rate
             return f"The agent's learning rate is: {learning_rate}."
         elif any(intent in ["training", "learning status", "status"] for intent in intents):
-            return f"The agent is currently {'training' if not self.done else 'not training'}."
+            return f"The agent is currently {'training' if self.episodes_trained > 0 else 'not training'}."
         elif any(intent in ["episodes trained", "training progress", "episodes", "trained"] for intent in intents):
             return f"The agent has been trained for {self.episodes_trained} episodes."
         elif any(intent in ["state", "status"] for intent in intents):
