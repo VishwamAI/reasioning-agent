@@ -106,6 +106,11 @@ class ReasoningAgent:
         intents = [token.lemma_ for token in doc if token.pos_ in ["VERB", "NOUN"]]
         entities = [ent.text for ent in doc.ents]
 
+        # Check for greetings
+        greetings = ["hi", "hello", "hey"]
+        if any(greet in query.lower() for greet in greetings):
+            return "How can I assist you today?"
+
         if "state" in intents:
             return f"The current state is: {self.state}"
         elif "reward" in intents:
