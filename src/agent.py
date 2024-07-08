@@ -142,12 +142,11 @@ class ReasoningAgent:
         elif entities:
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
+            # Check for greetings
+            greetings = ["hi", "hello", "hey"]
+            if any(greet in query.lower() for greet in greetings):
+                return "How can I assist you today?"
             return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, decision-making process, training status, hyperparameters, model architecture, learning rate, batch size, or number of episodes trained."
-
-        # Check for greetings
-        greetings = ["hi", "hello", "hey"]
-        if any(greet in query.lower() for greet in greetings):
-            return "How can I assist you today?"
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
