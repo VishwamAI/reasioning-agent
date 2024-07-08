@@ -123,10 +123,16 @@ class ReasoningAgent:
             return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
         elif "architecture" in intents:
             return f"The agent's model architecture consists of a neural network with layers: {self.model.summary()}"
+        elif "learning" in intents and "rate" in intents:
+            return f"The agent's learning rate is: {self.model.optimizer.learning_rate.numpy()}"
+        elif "batch" in intents and "size" in intents:
+            return f"The agent's batch size is: {self.memory.maxlen}"
+        elif "episode" in intents and "trained" in intents:
+            return f"The agent has been trained for {self.episodes_trained} episodes."
         elif entities:
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
-            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, decision-making process, training status, hyperparameters, or model architecture."
+            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, decision-making process, training status, hyperparameters, model architecture, learning rate, batch size, or number of episodes trained."
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
