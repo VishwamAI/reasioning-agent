@@ -6,6 +6,10 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 from collections import deque
 import random
+import spacy
+
+# Load the spaCy model
+nlp = spacy.load("en_core_web_sm")
 
 class ReasoningAgent:
     def __init__(self, env_name):
@@ -96,18 +100,23 @@ class ReasoningAgent:
             print(f"Episode {e+1}/{episodes}, Total reward: {total_reward}, Epsilon: {self.epsilon}")
 
     def handle_query(self, query):
-        query = query.lower()
-        if "state" in query:
+        doc = nlp(query)
+        intents = [token.lemma_ for token in doc if token.pos_ in ["VERB", "NOUN"]]
+        entities = [ent.text for ent in doc.ents]
+
+        if "state" in intents:
             return f"The current state is: {self.state}"
-        elif "reward" in query:
+        elif "reward" in intents:
             return f"The total reward accumulated is: {self.total_reward}"
-        elif "done" in query:
+        elif "done" in intents:
             return f"The episode is {'done' if self.done else 'not done'}"
-        elif "action" in query:
+        elif "action" in intents:
             action = self.choose_action(self.state)
             return f"The chosen action is: {action}"
+        elif entities:
+            return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
-            return "I'm sorry, I don't understand the question."
+            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, or action."
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
