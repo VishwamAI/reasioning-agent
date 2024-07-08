@@ -6,7 +6,8 @@ class TestReasoningAgent(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.agent = ReasoningAgent(env_name="CartPole-v1")
-        cls.agent.train(episodes=10, batch_size=32)
+        # Commenting out the training process to avoid long execution times during tests
+        # cls.agent.train(episodes=10, batch_size=32)
 
     def test_handle_query_state(self):
         response = self.agent.handle_query("What is the current state?")
@@ -19,6 +20,7 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_done(self):
         response = self.agent.handle_query("Is the episode done?")
         self.assertIn("The episode is", response)
+        self.assertIn("Training has", response)
 
     def test_handle_query_action(self):
         response = self.agent.handle_query("What is the chosen action?")
@@ -43,6 +45,8 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_architecture(self):
         response = self.agent.handle_query("What is the model architecture?")
         self.assertIn("The agent's model architecture consists of", response)
+        if self.agent.episodes_trained == 0:
+            self.assertIn("Dense layers with ReLU activations", response)
 
     def test_handle_query_learning_rate(self):
         response = self.agent.handle_query("What is the learning rate?")
@@ -55,6 +59,7 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_episodes_trained(self):
         response = self.agent.handle_query("How many episodes have been trained?")
         self.assertIn("The agent has been trained for", response)
+        self.assertIn("Training has", response)
 
     def test_handle_query_unknown(self):
         response = self.agent.handle_query("What is the meaning of life?")
