@@ -115,9 +115,7 @@ class ReasoningAgent:
             except AttributeError:
                 learning_rate = 0.001  # Default learning rate
             return f"The agent's learning rate is: {learning_rate}."
-        elif any(intent in ["training", "learning", "learning status", "status", "progress", "trained"] for intent in intents):
-            return f"The agent is currently {'training' if self.episodes_trained > 0 else 'not training'}."
-        elif any(intent in ["episodes trained", "training progress", "episodes", "trained"] for intent in intents):
+        elif any(intent in ["training", "learning", "learning status", "status", "progress", "trained", "episodes trained", "training progress", "episodes"] for intent in intents):
             return f"The agent has been trained for {self.episodes_trained} episodes."
         elif any(intent in ["state", "status"] for intent in intents):
             return f"The current state is: {self.state}"
@@ -126,8 +124,6 @@ class ReasoningAgent:
         elif any(intent in ["action", "move"] for intent in intents):
             action = self.choose_action(self.state)
             return f"The chosen action is: {action}"
-        elif any(intent in ["progress", "advancement", "development", "improvement"] for intent in intents):
-            return f"The agent has completed {self.episodes_trained} episodes with a total reward of {self.total_reward}."
         elif any(intent in ["decision", "process"] for intent in intents):
             return f"The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model."
         elif any(intent in ["hyperparameter", "parameter"] for intent in intents):
@@ -146,7 +142,7 @@ class ReasoningAgent:
             greetings = ["hi", "hello", "hey"]
             if any(greet in query.lower() for greet in greetings):
                 return "How can I assist you today?"
-            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, decision-making process, training status, hyperparameters, model architecture, learning rate, batch size, number of episodes trained, or episode completion status."
+            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, training status, hyperparameters, model architecture, learning rate, batch size, number of episodes trained, or episode completion status."
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")

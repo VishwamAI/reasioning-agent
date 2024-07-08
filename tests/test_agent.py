@@ -41,7 +41,7 @@ class TestReasoningAgent(unittest.TestCase):
 
     def test_handle_query_progress(self):
         response = self.agent.handle_query("What is the progress?")
-        self.assertIn("The agent has completed", response)
+        self.assertIn("The agent has been trained for", response)
         self.assertIn("episodes", response)
 
     def test_handle_query_decision(self):
@@ -50,8 +50,8 @@ class TestReasoningAgent(unittest.TestCase):
 
     def test_handle_query_training(self):
         response = self.agent.handle_query("What is the learning status?")
-        self.assertIn("The agent is currently", response)
-        self.assertIn("training", response)
+        self.assertIn("The agent has been trained for", response)
+        self.assertIn("episodes", response)
 
     def test_handle_query_hyperparameters(self):
         response = self.agent.handle_query("What are the hyperparameters?")
