@@ -42,6 +42,7 @@ class TestReasoningAgent(unittest.TestCase):
     def test_handle_query_progress(self):
         response = self.agent.handle_query("What is the progress?")
         self.assertIn("The agent has completed", response)
+        self.assertIn("episodes", response)
 
     def test_handle_query_decision(self):
         response = self.agent.handle_query("What is the decision-making process?")
