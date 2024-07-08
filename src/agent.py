@@ -117,10 +117,16 @@ class ReasoningAgent:
             return f"The agent has completed {self.total_reward} reward points so far."
         elif "decision" in intents:
             return f"The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model."
+        elif "training" in intents:
+            return f"The agent is currently {'training' if self.epsilon > self.epsilon_min else 'not training'}."
+        elif "hyperparameter" in intents:
+            return f"The agent's hyperparameters are: gamma={self.gamma}, epsilon={self.epsilon}, epsilon_min={self.epsilon_min}, epsilon_decay={self.epsilon_decay}."
+        elif "architecture" in intents:
+            return f"The agent's model architecture consists of a neural network with layers: {self.model.summary()}"
         elif entities:
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
-            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, or decision-making process."
+            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, decision-making process, training status, hyperparameters, or model architecture."
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
