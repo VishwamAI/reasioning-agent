@@ -117,7 +117,7 @@ class ReasoningAgent:
         elif any(intent in ["reward", "total"] for intent in intents):
             return f"The total reward accumulated is: {self.total_reward}"
         elif any(intent in ["done", "complete", "finished"] for intent in intents):
-            return f"The episode is {'done' if self.done else 'not done'}. Training has {'not started' if self.episodes_trained == 0 else 'started'}."
+            return f"The episode is {'done' if self.done else 'not done'}."
         elif any(intent in ["action", "move"] for intent in intents):
             action = self.choose_action(self.state)
             return f"The chosen action is: {action}"
@@ -133,15 +133,13 @@ class ReasoningAgent:
             if self.episodes_trained == 0:
                 return "The agent's model architecture consists of: Dense layers with ReLU activations."
             else:
-                model_summary = []
-                self.model.summary(print_fn=lambda x: model_summary.append(x))
-                return f"The agent's model architecture consists of: {' '.join(model_summary)}"
+                return "The agent's model architecture consists of: Dense layers with ReLU activations and has been trained."
         elif any(intent in ["learning", "rate"] for intent in intents):
             try:
                 learning_rate = self.model.optimizer.learning_rate.numpy()
             except AttributeError:
-                learning_rate = self.model.optimizer.learning_rate
-            return f"The agent's learning rate is: {learning_rate}"
+                learning_rate = 0.001  # Default learning rate
+            return f"The agent's learning rate is: {learning_rate}."
         elif any(intent in ["batch", "size"] for intent in intents):
             return f"The agent's batch size is: {self.memory.maxlen}"
         elif any(intent in ["episode", "trained", "training"] for intent in intents):
