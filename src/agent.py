@@ -113,10 +113,14 @@ class ReasoningAgent:
         elif "action" in intents:
             action = self.choose_action(self.state)
             return f"The chosen action is: {action}"
+        elif "progress" in intents:
+            return f"The agent has completed {self.total_reward} reward points so far."
+        elif "decision" in intents:
+            return f"The agent's decision-making process involves selecting actions based on the highest Q-values predicted by the model."
         elif entities:
             return f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
-            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, or action."
+            return "I'm sorry, I don't understand the question. Please ask about the state, reward, episode status, action, progress, or decision-making process."
 
 if __name__ == "__main__":
     agent = ReasoningAgent(env_name="CartPole-v1")
