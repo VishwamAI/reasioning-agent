@@ -35,17 +35,22 @@ def interactive_session(agent):
             print(f"Agent: {response}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train a reasoning agent.")
+    parser = argparse.ArgumentParser(description="Train a reasoning agent or start an interactive session.")
     parser.add_argument("--env_name", type=str, default="CartPole-v1", help="Name of the gym environment.")
     parser.add_argument("--episodes", type=int, default=1000, help="Number of training episodes.")
     parser.add_argument("--batch_size", type=int, default=32, help="Batch size for training.")
+    parser.add_argument("--mode", type=str, choices=["train", "interactive"], default="interactive", help="Mode to run the script in: 'train' or 'interactive'.")
     args = parser.parse_args()
 
-    # Train the agent
-    trained_agent = train_agent(args.env_name, args.episodes, args.batch_size)
-
-    # Run example queries
-    run_example_queries(trained_agent)
-
-    # Start interactive session
-    interactive_session(trained_agent)
+    if args.mode == "train":
+        # Train the agent
+        trained_agent = train_agent(args.env_name, args.episodes, args.batch_size)
+        # Run example queries
+        run_example_queries(trained_agent)
+        # Start interactive session
+        interactive_session(trained_agent)
+    else:
+        # Initialize the agent without training
+        agent = ReasoningAgent(args.env_name)
+        # Start interactive session
+        interactive_session(agent)
