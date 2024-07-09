@@ -1,2 +1,5 @@
 # Ignore the virtual environment directory
 reasoning-agent-venv/
+
+# Ignore Python cache directories
+__pycache__/
