@@ -1,28 +1,33 @@
 import gym
 from agent import ReasoningAgent
 import argparse
+import logging
 
-def train_agent(env_name, episodes, batch_size):
+def train_agent(env_name, episodes, batch_size, dataset_path=None):
     try:
         agent = ReasoningAgent(env_name)
+        if dataset_path:
+            # Load the dataset and integrate it into the training process
+            logging.info(f"Loading dataset from {dataset_path}")
+            # Add dataset loading logic here
         agent.train(episodes, batch_size)
         return agent
     except Exception as e:
-        print(f"An error occurred during training: {e}")
+        logging.error(f"An error occurred during training: {e}")
         return None
 
 def run_example_queries(agent):
     if agent:
-        print(agent.handle_query("What is the current state?"))
-        print(agent.handle_query("What is the total reward?"))
-        print(agent.handle_query("Is the episode done?"))
-        print(agent.handle_query("What action should be taken?"))
-        print(agent.handle_query("How many episodes have been trained?"))
-        print(agent.handle_query("What is the agent's learning rate?"))
-        print(agent.handle_query("Tell me about the agent's model architecture."))
-        print(agent.handle_query("What are the agent's hyperparameters?"))
-        print(agent.handle_query("What is the batch size?"))
-        print(agent.handle_query("Hello"))
+        logging.info(agent.handle_query("What is the current state?"))
+        logging.info(agent.handle_query("What is the total reward?"))
+        logging.info(agent.handle_query("Is the episode done?"))
+        logging.info(agent.handle_query("What action should be taken?"))
+        logging.info(agent.handle_query("How many episodes have been trained?"))
+        logging.info(agent.handle_query("What is the agent's learning rate?"))
+        logging.info(agent.handle_query("Tell me about the agent's model architecture."))
+        logging.info(agent.handle_query("What are the agent's hyperparameters?"))
+        logging.info(agent.handle_query("What is the batch size?"))
+        logging.info(agent.handle_query("Hello"))
 
 def interactive_session(agent):
     if agent:
@@ -39,12 +44,13 @@ if __name__ == "__main__":
     parser.add_argument("--env_name", type=str, default="CartPole-v1", help="Name of the gym environment.")
     parser.add_argument("--episodes", type=int, default=1000, help="Number of training episodes.")
     parser.add_argument("--batch_size", type=int, default=32, help="Batch size for training.")
+    parser.add_argument("--dataset_path", type=str, help="Path to the advancement dataset.")
     parser.add_argument("--mode", type=str, choices=["train", "interactive"], default="interactive", help="Mode to run the script in: 'train' or 'interactive'.")
     args = parser.parse_args()
 
     if args.mode == "train":
         # Train the agent
-        trained_agent = train_agent(args.env_name, args.episodes, args.batch_size)
+        trained_agent = train_agent(args.env_name, args.episodes, args.batch_size, args.dataset_path)
         # Run example queries
         run_example_queries(trained_agent)
         # Start interactive session
