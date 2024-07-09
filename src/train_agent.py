@@ -24,6 +24,16 @@ def run_example_queries(agent):
         print(agent.handle_query("What is the batch size?"))
         print(agent.handle_query("Hello"))
 
+def interactive_session(agent):
+    if agent:
+        print("Interactive session started. Type 'exit' to end the session.")
+        while True:
+            user_input = input("You: ")
+            if user_input.lower() == 'exit':
+                break
+            response = agent.handle_query(user_input)
+            print(f"Agent: {response}")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train a reasoning agent.")
     parser.add_argument("--env_name", type=str, default="CartPole-v1", help="Name of the gym environment.")
@@ -36,3 +46,6 @@ if __name__ == "__main__":
 
     # Run example queries
     run_example_queries(trained_agent)
+
+    # Start interactive session
+    interactive_session(trained_agent)
