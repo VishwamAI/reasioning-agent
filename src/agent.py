@@ -124,7 +124,7 @@ class ReasoningAgent:
         entities = [ent.text for ent in doc.ents]
 
         # Debug logging
-        logging.debug(f"Query: {query}")
+        logging.info(f"Query: {query}")
         logging.debug(f"Intents: {intents}")
         logging.debug(f"Entities: {entities}")
         logging.debug(f"Done: {self.done}")
@@ -167,6 +167,8 @@ class ReasoningAgent:
                 response = "The agent's model architecture consists of: Dense layers with ReLU activations and has been trained."
         elif any(intent in ["batch", "size"] for intent in intents):
             response = f"The agent's batch size is: {self.memory.maxlen}"
+        elif any(intent in ["dataset", "data", "training data"] for intent in intents):
+            response = "The agent is trained using the specified advancement dataset."
         elif entities:
             response = f"I'm sorry, I don't have information about: {', '.join(entities)}"
         else:
@@ -181,7 +183,7 @@ class ReasoningAgent:
         self.context["last_query"] = query
         self.context["last_response"] = response
 
-        logging.debug(f"Returning: {response}")
+        logging.info(f"Returning: {response}")
         return response
 
 if __name__ == "__main__":
