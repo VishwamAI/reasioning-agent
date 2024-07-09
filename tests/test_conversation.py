@@ -4,7 +4,7 @@ from src.agent import ReasoningAgent
 class TestReasoningAgentConversation(unittest.TestCase):
 
     def setUp(self):
-        self.agent = ReasoningAgent()
+        self.agent = ReasoningAgent(env_name="CartPole-v1")
 
     def test_greeting(self):
         query = "hi"
